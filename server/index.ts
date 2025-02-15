@@ -3,6 +3,7 @@ import cors from 'cors';
 import { StatusCodes } from 'http-status-codes';
 import forecastRoutes from './routes/forecast.ts';
 import triageRoutes from './routes/triage.ts';
+import aiRoutes from './routes/ai.ts';
 import { errorHandler } from './middleware/errorHandler.ts';
 
 const app = express();
@@ -20,6 +21,7 @@ app.get('/health', (req, res) => {
 // Routes
 app.use('/api/forecast', forecastRoutes);
 app.use('/api/triage', triageRoutes);
+app.use('/api/ai', aiRoutes);
 
 // 404 handler
 app.use((req, res) => {

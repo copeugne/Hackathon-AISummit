@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { AlertCircle, Building2 as Hospital, Ambulance, Clock, Search, Activity, Brain, Thermometer } from 'lucide-react';
+import { AlertCircle, Building2 as Hospital, Ambulance, Clock, Search, Activity, Brain, Thermometer, Zap } from 'lucide-react';
 import { useForm } from '../context/FormContext';
+import { logEmergencyData } from '../utils/formLogger';
+import { toast } from 'sonner';
 import { HospitalMap } from './HospitalMap';
 import { Modal } from './Modal';
 
@@ -32,7 +34,34 @@ export function TriageForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    logEmergencyData(triage);
     setIsModalOpen(true);
+  };
+
+  const handleApiTest = async () => {
+    try {
+      const emergencyData = `
+        Urgency Level: ${triage.urgencyLevel}
+        Incident Type: ${triage.incidentType}
+        Pain Level: ${triage.painLevel}/10
+        Duration: ${triage.duration} ${triage.durationUnit}
+        Critical Signs: ${triage.criticalSigns.join(', ')}
+        Consciousness State: ${triage.consciousnessState}
+        Description: ${triage.description}
+      `;
+
+      toast.promise(completeRequest(emergencyData), {
+        loading: 'Calling API...',
+        success: (data) => {
+          console.log('API Response:', data);
+          return 'API call successful!';
+        },
+        error: 'API call failed',
+      });
+    } catch (error) {
+      console.error('Error calling API:', error);
+      toast.error('Failed to call API');
+    }
   };
 
   return (
@@ -276,16 +305,29 @@ export function TriageForm() {
           </div>
 
           <div className="flex items-center justify-center pt-8">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              disabled={!triage.urgencyLevel || !triage.incidentType}
-              type="submit"
-              className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-red-600 disabled:hover:scale-100"
-            >
-              <Hospital className="w-5 h-5" />
-              <span>Find Swift Route</span>
-            </motion.button>
+            <div className="flex space-x-4">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                disabled={!triage.urgencyLevel || !triage.incidentType}
+                type="submit"
+                className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-red-600 disabled:hover:scale-100"
+              >
+                <Hospital className="w-5 h-5" />
+                <span>Find Swift Route</span>
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="button"
+                onClick={handleApiTest}
+                className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all"
+              >
+                <Zap className="w-5 h-5" />
+                <span>Test API Call</span>
+              </motion.button>
+            </div>
           </div>
         </form>
       </div>
