@@ -18,7 +18,7 @@ export async function generateAIResponse(emergencyData: string): Promise<string>
         const response = await client.chat.completions.create({
             model: "mistral-nemo-instruct-2407",
             messages: [
-                { role: "system", content: "You are an AI specialized in emergency triage. Analyze the following data and provide insights." },
+                { role: "system", content: "You are an AI specialized in emergency triage. Analyze the following data and provide insights."},
                 { role: "user", content: emergencyData },
             ],
             max_tokens: 512,
