@@ -85,10 +85,11 @@ Future iterations of SwiftDispatch for SAMU will include:
 
 1. **Clone the repository:** `git clone https://github.com/xxx/Hackathon-xxx`
 2. **Navigate to the project directory:** `cd Hackathon-AISummit`
-3. **Run `npm run dev` to start the front-end**
-4. **Run `npm run server` to start the server**
-5. **Access the SAMU Dispatch Interface in your browser:** `http://localhost:5173`
-6. **Make sure the server is `healthy` with `curl -X GET http://localhost:3000/health`**
+3. **Run `npm install` to install all of the required packages**
+4. **Run `npm run dev` to start the front-end**
+5. **Run `npm run server` to start the server**
+6. **Access the SAMU Dispatch Interface in your browser:** `http://localhost:5173`
+7. **Make sure the server is `healthy` with `curl -X GET http://localhost:3000/health`**
 
 >[!TIP]
 > The server port is either 5174 or 3000. <br/><br/>
