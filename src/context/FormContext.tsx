@@ -19,8 +19,14 @@ const initialState: FormState = {
   triage: {
     region: 'Île-de-France',
     specialty: 'Cardiologist',
-    urgencyLevel: 'routine',
-    symptom: '',
+    urgencyLevel: '',
+    incidentType: '',
+    painLevel: '5',
+    duration: '',
+    durationUnit: 'minutes',
+    criticalSigns: [],
+    consciousnessState: '',
+    description: '',
   },
   appointment: {
     type: 'in-person',

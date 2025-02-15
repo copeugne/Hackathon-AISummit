@@ -14,7 +14,7 @@ function AppContent() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <span className="text-xl font-bold text-primary">DocFlow</span>
+              <span className="text-xl font-bold text-red-600">SwiftDispatch</span>
             </div>
           </div>
         </div>
@@ -44,15 +44,15 @@ function App() {
         position="top-center"
         toastOptions={{
           style: {
-            background: '#38A169',
+            background: '#DC2626',
             color: 'white',
           },
-          className: 'bg-success text-white',
+          className: 'bg-red-600 text-white',
           success: {
             icon: '✓',
             iconTheme: {
               primary: 'white',
-              secondary: '#38A169',
+              secondary: '#DC2626',
             },
           },
         }}

@@ -9,8 +9,14 @@ export interface PatientInfo {
 export interface TriageData {
   region: string;
   specialty: string;
-  urgencyLevel: 'routine' | 'urgent';
-  symptom: string;
+  urgencyLevel: string;
+  incidentType: string;
+  painLevel: string;
+  duration: string;
+  durationUnit: string;
+  criticalSigns: string[];
+  consciousnessState: string;
+  description: string;
 }
 
 export interface AppointmentType {
