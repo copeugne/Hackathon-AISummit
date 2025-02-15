@@ -38,31 +38,49 @@ export function TriageForm() {
     setIsModalOpen(true);
   };
 
-  const handleApiTest = async () => {
-    try {
-      const emergencyData = `
-        Urgency Level: ${triage.urgencyLevel}
-        Incident Type: ${triage.incidentType}
-        Pain Level: ${triage.painLevel}/10
-        Duration: ${triage.duration} ${triage.durationUnit}
-        Critical Signs: ${triage.criticalSigns.join(', ')}
-        Consciousness State: ${triage.consciousnessState}
-        Description: ${triage.description}
-      `;
+const handleApiTest = async () => {
+  try {
+    const emergencyData = `
+      Urgency Level: ${triage.urgencyLevel}
+      Incident Type: ${triage.incidentType}
+      Pain Level: ${triage.painLevel}/10
+      Duration: ${triage.duration} ${triage.durationUnit}
+      Critical Signs: ${triage.criticalSigns.join(', ')}
+      Consciousness State: ${triage.consciousnessState}
+      Description: ${triage.description}
+    `;
 
-      toast.promise(completeRequest(emergencyData), {
-        loading: 'Calling API...',
-        success: (data) => {
-          console.log('API Response:', data);
-          return 'API call successful!';
+    toast.promise(
+      fetch("http://localhost:3000/api/ai/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        error: 'API call failed',
-      });
-    } catch (error) {
-      console.error('Error calling API:', error);
-      toast.error('Failed to call API');
-    }
-  };
+        body: JSON.stringify({ emergencyData }),
+      })
+        .then(async (response) => {
+          if (!response.ok) {
+            throw new Error("API responded with an error.");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("API Response:", data);
+          return data.response || "No response received from AI.";
+        }),
+      {
+        loading: "Calling AI API...",
+        success: (message) => message,
+        error: "API call failed",
+      }
+    );
+  } catch (error) {
+    console.error("Error calling API:", error);
+    toast.error("Failed to call API");
+  }
+};
+
+
 
   return (
     <motion.div
