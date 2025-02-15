@@ -1,84 +1,51 @@
-# 🩺 DocFlow: Intelligent Healthcare Access Orchestrator 🚀
+# 🚑 SwiftDispatch: Streamlined Emergency Dispatch for SAMU
 
-![DocFlow Banner](https://files.catbox.moe/3oxeax.webp)
+![DocFlow SAMU Interface](https://files.catbox.moe/x88ini.png)
 
-**A Hackathon Solution to Streamline Patient Journeys & Reduce Wait Times in Healthcare**
+**A Hackathon Solution to Optimize Emergency Response and Patient Redirection**
 
-[![Hackathon Name Badge](https://img.shields.io/badge/Hackathon-Nameless-blue.svg)](https://hackathon.example.com) [![Built With Python](https://img.shields.io/badge/Built%20With-Python-blue.svg)](https://www.python.org/) [![Frontend with React](https://img.shields.io/badge/Frontend-React-blue.svg)](https://reactjs.org/) [![GitHub license](https://img.shields.io/badge/license-MIT-blue)](https://github.com/copeugne/Hackathon-AISummit/blob/main/LICENSE)
-
----
-
-<a href="https://files.catbox.moe/qquku5.png">
-  <img src="https://files.catbox.moe/qquku5.png" width="509" height="773"/>
-</a>
-
-## 🎯 The Challenge: Healthcare Access Bottlenecks
-
-In many regions, including Île-de-France, patients face long waiting periods for specialist care. These delays can lead to:
-- **Delayed diagnoses**
-- **Increased patient anxiety**
-- **Potentially poorer health outcomes**
-
-Existing systems often lack the intelligence to efficiently manage demand, optimize resource allocation, and guide patients to the most appropriate, timely care pathway.
+[![Hackathon Name Badge](https://img.shields.io/badge/Hackathon-Nameless-blue.svg)](https://hackathon.example.com) [![Built With Python](https://img.shields.io/badge/Built%20With-Python-blue.svg)](https://www.python.org/) [![Frontend with React](https://img.shields.io/badge/Frontend-React-blue.svg)](https://reactjs.org/) [![GitHub license](https://img.shields.io/badge/license-MIT-blue)](https://github.com/xxx/Hackathon-xxx/blob/main/LICENSE)
 
 ---
 
-## 💡 Our Solution: DocFlow
+## 🎯 The Challenge: Efficient Emergency Response
 
-**DocFlow** is an AI-powered platform designed to revolutionize patient access to healthcare by:
-- **Predicting & Reducing Wait Times:** Forecasting appointment demand to guide patients toward faster care options.
-- **Optimizing Teleconsultation (TCS):** Recommending TCS as a viable, faster alternative to in-person visits.
-- **Streamlining Patient Journeys:** Offering a smart triage and booking flow to efficiently direct patients to the right specialty and appointment type.
+SAMU regulators face the challenge of rapidly assessing emergency situations and directing patients to the most appropriate hospitals. This process requires quick decision-making and accurate information.
 
-> [!IMPORTANT]
-> **Demo Focus:** Reducing waiting times for Cardiology appointments in Île-de-France through a user-friendly Patient Portal experience.
+---
+
+## 💡 Our Solution: SwiftDispatch for SAMU
+
+**SwiftDispatch** is an AI-powered tool designed to streamline emergency dispatch for SAMU regulators by:
+
+* **Rapid Triage:** Quickly assessing patient conditions based on critical information.
+* **Intelligent Hospital Redirection:** Suggesting optimal hospitals based on patient needs and real-time data.
+* **Enhanced Decision-Making:** Providing actionable insights to support informed decisions.
+
+> [!CAUTION]
+> **MVP Demo Scope:** This demonstration focuses on the core triage and hospital redirection workflow for a limited set of emergency scenarios. Real-world SAMU operations involve significantly more complex factors, which will be addressed in future development phases.
+
 
 ---
 
 ## ✨ Key Features (MVP Demo)
 
-- **Patient-Centric Triage:**  
-  An intuitive portal where patients select their region, desired specialty (Cardiology in Île-de-France), and urgency.
+* **Intuitive Emergency Triage Form:** A user-friendly interface for inputting critical patient information.
+* **AI-Powered Triage and Recommendation:** Real-time analysis of patient data to suggest appropriate hospitals.
+* **Mocked OpenStreetMap Integration:** A visual representation of hospital locations and potential redirection routes.
 
-- **Intelligent Waiting Time Comparison:**  
-  A side-by-side display comparing:
-  - **Current Wait Times:** Typical in-person delays based on real data.
-  - **DocFlow Optimized Wait Times:** A significantly reduced predicted waiting time using our AI-driven booking system.
+> [!IMPORTANT]
+> **Time Savings:** SwiftDispatch's streamlined triage and hospital recommendation process is designed to significantly reduce the time SAMU regulators spend on initial assessment and hospital selection, allowing for faster patient care.
 
-- **Smart Teleconsultation Recommendation:**  
-  Dynamic guidance towards Teleconsultation for routine or non-critical check-ups when in-person wait times are long.
 
-- **Seamless Mock Booking Flow:**  
-  A simulated booking experience showcasing the simplicity and efficiency of DocFlow.
-
-- **Quantifiable Impact Visualization:**  
-  Engaging visuals and metrics demonstrating:
-  - Average waiting time reduction
-  - Increased Teleconsultation adoption
- 
 ---
 
 ## 🚀 Demo Walkthrough
 
-Experience DocFlow through the journey of Sophie in Île-de-France:
-
-1. **Identifying the Problem:**  
-   An introductory screen presents current long wait times.
-   
-2. **Intelligent Triage:**  
-   Sophie inputs her needs via the Patient Portal.
-   
-3. **Optimized Wait Times Display:**  
-   The platform instantly contrasts current vs. optimized waiting times.
-   
-4. **Teleconsultation Recommendation:**  
-   Sophie receives a prompt recommendation for a faster Teleconsultation option.
-   
-5. **Streamlined Booking:**  
-   She completes a mock booking with ease.
-   
-6. **Impact Visualization:**  
-   The demo wraps up with impactful metrics that highlight DocFlow’s benefits.
+1. **Emergency Triage:** SAMU regulators input critical patient information into the form.
+2. **AI Analysis:** SwiftDispatch processes the input data to assess urgency and identify key needs.
+3. **Hospital Recommendations:** The tool suggests optimal hospitals based on the analysis.
+4. **Visualized Redirection:** A mocked map displays the recommended hospitals and their locations.
 
 ---
 
@@ -86,49 +53,22 @@ Experience DocFlow through the journey of Sophie in Île-de-France:
 
 Built for speed, scalability, and rapid prototyping:
 
-- **Frontend:**  
-  [React](https://reactjs.org/) for a dynamic, responsive UI.
-  
-- **Backend:**  
-  [Node.js with Express](https://expressjs.com/) for building a fast, efficient API.
-  
-- **AI/ML:**  
-  [scikit-learn](https://scikit-learn.org/), [statsmodels](https://www.statsmodels.org/stable/index.html) for our basic waiting time prediction models.
-  
-- **Data Storage:**  
-  [PostgreSQL](https://www.postgresql.org/) for lightweight data management.
-  
-- **Deployment:**  
-  [Docker](https://www.docker.com/) for containerization, ensuring easy setup and scalability.
-  
-<br>
-
-> [!TIP]
-> **Why this stack?**  
-> It supports rapid development, is easy to use, and leverages industry-standard technologies—ideal for building a functional prototype in a hackathon setting.
+- **Frontend:** React for a dynamic and responsive user interface.
+- **Backend:** Node.js and Express for a robust API.
+- **AI/ML:** Scikit-learn and Statsmodels for basic data analysis and modeling.
+- **Data Storage:** PostgreSQL for lightweight data management.
+- **Deployment:** Docker for containerization and easy deployment.
 
 ---
 
 ## 🔮 Future Enhancements
 
-Looking beyond our MVP, future iterations of DocFlow will include:
-- **Advanced Demand Forecasting:**  
-  Employing more sophisticated AI/ML models for improved accuracy.
-  
-- **No-Show Risk Prediction:**  
-  AI-driven insights to optimize appointment scheduling and reduce wasted slots.
-  
-- **Comprehensive Dashboards:**  
-  Real-time views for healthcare providers and administrators to monitor performance metrics.
-  
-- **Intelligent Symptom-Based Triage:**  
-  Integrating NLP and symptom-checker APIs for personalized triage.
-  
-- **Real-time Slot Optimization:**  
-  Dynamic adjustment of appointment slots based on predictive demand.
-  
-- **Seamless EHR Integration:**  
-  Direct integration with Electronic Health Records for a holistic healthcare ecosystem.
+Future iterations of SwiftDispatch for SAMU will include:
+
+* **Advanced AI Models:** More sophisticated AI algorithms for improved triage and recommendations.
+* **Real-time Hospital Capacity Data:** Integration with real-time hospital data to optimize redirection.
+* **Integration with SAMU Systems:** Seamless integration with existing SAMU systems for efficient data exchange.
+* **Enhanced User Interface:** A more intuitive and user-friendly interface for SAMU regulators.
 
 ---
 
@@ -143,20 +83,19 @@ Looking beyond our MVP, future iterations of DocFlow will include:
 
 ## 🚀 Getting Started (Local Demo Setup)
 
-1.  **Clone the repository:** `git clone https://github.com/copeugne/Hackathon-AISummit`
-2.  **Navigate to the project directory:** `cd Hackathon-AISummit`
-3.  **Run `npm run dev` to start the front-end**
-4.  **Run `npm run server` to start the server**
-5.  **Access the Patient Portal in your browser:** `http://localhost:5173`
-6.  **Make sure the server is `healthy` with `curl -X GET http://localhost:3000/health`**
+1. **Clone the repository:** `git clone https://github.com/xxx/Hackathon-xxx`
+2. **Navigate to the project directory:** `cd Hackathon-AISummit`
+3. **Run `npm run dev` to start the front-end**
+4. **Run `npm run server` to start the server**
+5. **Access the SAMU Dispatch Interface in your browser:** `http://localhost:5173`
+6. **Make sure the server is `healthy` with `curl -X GET http://localhost:3000/health`**
 
-> [!TIP]
-> The server port is either 5174 or 3000
+>[!TIP]
+> The server port is either 5174 or 3000. <br/><br/>
+> **Quick Start:** For the fastest demo setup, ensure both your front-end and server terminals are open *before* accessing `http://localhost:5173` in your browser. This ensures a smooth initial loading experience.
 
-## 📄 License
+---
 
-[MIT License](https://github.com/copeugne/Hackathon-AISummit/blob/main/LICENSE)
-
------
-
-**Let's revolutionize healthcare access with DocFlow\!** 🚀
+**Let's revolutionize emergency response with SwiftDispatch!** 🚀
+> [!NOTE]
+> **Looking Ahead:** SwiftDispatch's current capabilities are a foundation. We envision future versions integrating real-time data feeds, advanced AI algorithms, and seamless integration with existing SAMU infrastructure to create a truly transformative emergency dispatch solution.
