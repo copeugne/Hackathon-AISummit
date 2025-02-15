@@ -1,0 +1,30 @@
+// tsconfig.json
+{
+  "compilerOptions": {
+    // --- Common Options ---
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // --- Server-Specific (Overrides) ---
+    "outDir": "dist",
+    "noEmit": false,
+
+    // --- Frontend-Specific (Overrides) ---
+    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["src/**/*", "server/**/*", "vite.config.ts"],
+  "exclude": ["node_modules"]
+}
