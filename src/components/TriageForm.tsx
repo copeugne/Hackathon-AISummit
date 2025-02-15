@@ -349,17 +349,17 @@ const handleApiTest = async () => {
           </div>
         </form>
       </div>
-
+<div className='flex items-center justify-center'>
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Hospital Redirection Suggestions"
       >
-        <div className="space-y-6">
+        <div className="space-y-6 flex justify-center items-center">
           <HospitalMap />
 
           <div className="space-y-4">
-            <h4 className="font-semibold text-gray-900">Suggested Hospitals:</h4>
+            <h4 className="font-semibold text-gray-900 flex justify-center items-center">Suggested Hospitals:</h4>
             {[
               {
                 name: 'Hôpital Pitié-Salpêtrière',
@@ -407,6 +407,7 @@ const handleApiTest = async () => {
           </div>
         </div>
       </Modal>
+      </div>
     </motion.div>
   );
 }
