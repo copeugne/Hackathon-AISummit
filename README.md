@@ -144,7 +144,7 @@ Looking beyond our MVP, future iterations of DocFlow will include:
 3.  **Run `npm run dev` to start the front-end**
 4.  **Run `npm run server` to start the server**
 5.  **Access the Patient Portal in your browser:** `http://localhost:5173`
-6.  ** Make sure the server is `healthy` with `curl -X GET http://localhost:3000/health`
+6.  **Make sure the server is `healthy` with `curl -X GET http://localhost:3000/health`**
 
 > [!TIP]
 > The server port is either 5174 or 3000
