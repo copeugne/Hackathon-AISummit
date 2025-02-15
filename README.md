@@ -8,6 +8,10 @@
 
 ---
 
+<a href="https://files.catbox.moe/qquku5.png">
+  <img src="https://files.catbox.moe/qquku5.png" width="509" height="773"/>
+</a>
+
 ## 🎯 The Challenge: Healthcare Access Bottlenecks
 
 In many regions, including Île-de-France, patients face long waiting periods for specialist care. These delays can lead to:
