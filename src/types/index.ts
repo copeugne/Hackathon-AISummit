@@ -45,5 +45,6 @@ export interface HospitalData {
     name: string;
     address: string;
     distance: string;
+    coordinates: string;
     eta: string;
 }

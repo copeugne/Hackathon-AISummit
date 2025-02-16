@@ -30,34 +30,35 @@ const criticalSigns = [
   'Active Bleeding'
 ];
 
-let hospitals: HospitalData[] = [
-  {
-    id: 1,
-    name: 'Hôpital Pitié-Salpêtrière',
-    address: "47-83 Boulevard de l'Hôpital, 75013 Paris",
-    distance: '2.5 km',
-    eta: '8 min'
-  },
-  {
-    id: 2,
-    name: 'Hôpital Européen Georges-Pompidou',
-    address: '20 Rue Leblanc, 75015 Paris',
-    distance: '4.2 km',
-    eta: '12 min'
-  },
-  {
-    id: 3,
-    name: 'Hôpital Saint-Antoine',
-    address: '184 Rue du Faubourg Saint-Antoine, 75012 Paris',
-    distance: '3.8 km',
-    eta: '10 min'
-  }
-];
+// let hospitals: HospitalData[] = [
+//   {
+//     id: 1,
+//     name: 'Hôpital Pitié-Salpêtrière',
+//     address: "47-83 Boulevard de l'Hôpital, 75013 Paris",
+//     distance: '2.5 km',
+//     eta: '8 min'
+//   },
+//   {
+//     id: 2,
+//     name: 'Hôpital Européen Georges-Pompidou',
+//     address: '20 Rue Leblanc, 75015 Paris',
+//     distance: '4.2 km',
+//     eta: '12 min'
+//   },
+//   {
+//     id: 3,
+//     name: 'Hôpital Saint-Antoine',
+//     address: '184 Rue du Faubourg Saint-Antoine, 75012 Paris',
+//     distance: '3.8 km',
+//     eta: '10 min'
+//   }
+// ];
 
 export function TriageForm() {
   const { state, dispatch } = useForm();
   const { triage } = state;
   const [showMap, setShowMap] = React.useState(false);
+  const [hospitals, setHospitals] = React.useState<HospitalData[]>([]);
   
   const debouncedDispatch = useCallback(
     debounce((payload: any) => {
@@ -72,49 +73,69 @@ export function TriageForm() {
     setShowMap(true);
   };
 
-const handleApiTest = async () => {
-  try {
-    const emergencyData = `
-      Urgency Level: ${triage.urgencyLevel}
-      Incident Type: ${triage.incidentType}
-      Pain Level: ${triage.painLevel}/10
-      Duration: ${triage.duration} ${triage.durationUnit}
-      Critical Signs: ${triage.criticalSigns.join(', ')}
-      Consciousness State: ${triage.consciousnessState}
-      Description: ${triage.description}
-    `;
-
-    toast.promise(
-      fetch("http://localhost:3000/api/ai/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ emergencyData }),
-      })
-        .then(async (response) => {
-          if (!response.ok) {
-            throw new Error("API responded with an error.");
-          }
-          return response.json();
+  const handleApiTest = async () => {
+    try {
+      const emergencyData = `
+        Urgency Level: ${triage.urgencyLevel}
+        Incident Type: ${triage.incidentType}
+        Pain Level: ${triage.painLevel}/10
+        Duration: ${triage.duration} ${triage.durationUnit}
+        Critical Signs: ${triage.criticalSigns.join(', ')}
+        Consciousness State: ${triage.consciousnessState}
+        Description: ${triage.description}
+      `;
+  
+      toast.promise(
+        fetch("http://localhost:3000/api/ai/analyze", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ emergencyData }),
         })
-        .then((data) => {
-          console.log("API Response:", data);
-          return data.response || "No response received from AI.";
-        }),
-      {
-        loading: "Calling AI API...",
-        success: (message) => message,
-        error: "API call failed",
-      }
-    );
-  } catch (error) {
-    console.error("Error calling API:", error);
-    toast.error("Failed to call API");
-  }
-};
+          .then(async (response) => {
+            if (!response.ok) {
+              throw new Error("API responded with an error.");
+            }
+            return response.json()
+          })
+          .then((data) => {
+            
+            if (data) {
+              const ranking = JSON.parse(data.response);
+			  console.log(ranking);
+              const formattedHospitals: HospitalData[] = Object.keys(ranking).map((key, index) => {
+                const hospital = ranking[key];
+                return {
+                  id: index + 1, // Générer un ID unique basé sur l'index
+                  name: hospital.name,
+                  address: hospital.address,
+				  coordinates: hospital.geo,
+                  distance: "N/A", // Distance non fournie, à calculer si nécessaire
+                  eta: "N/A" // ETA non fourni, valeur par défaut
+                };
+              });
+              console.log(formattedHospitals)
+              setHospitals(formattedHospitals);
+            }
+  
+            // return rankedHosp
+            return "Hospitals list updated successfully!";
+          }),
+        {
+          loading: "Calling AI API...",
+          success: (message) => message,
+          error: "API call failed",
+        }
+      );
+    } catch (error) {
+      console.error("Error calling API:", error);
+      toast.error("Failed to call API");
+    }
+  };
+  
 
-
+// return JSON.stringify(data.response, null, 2) || "No response received from AI.";
 
   return (
     <motion.div
