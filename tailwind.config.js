@@ -4,6 +4,33 @@ export default {
   theme: {
     extend: {
       colors: {
+        urgency: {
+          critical: {
+            DEFAULT: '#FF3B3B',
+            light: '#FFE5E5',
+            dark: '#CC2F2F'
+          },
+          high: {
+            DEFAULT: '#FF8C42',
+            light: '#FFE8D9',
+            dark: '#CC7035'
+          },
+          medium: {
+            DEFAULT: '#FFD93D',
+            light: '#FFF8D9',
+            dark: '#CCB031'
+          },
+          low: {
+            DEFAULT: '#4CAF50',
+            light: '#E8F5E9',
+            dark: '#388E3C'
+          },
+          base: {
+            DEFAULT: '#B8D8F5',
+            light: '#EDF5FC',
+            dark: '#8FB6D9'
+          }
+        },
         samu: {
           DEFAULT: '#003399',
           light: '#B3D1FF',

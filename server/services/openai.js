@@ -80,34 +80,51 @@ export async function generateAIResponse(emergencyData) {
 
 		const prePompt = `
 You are an AI assistant specializing in emergency triage and hospital selection.
-Your task is to analyze a patient form and list of hospitals and rank all of them in a .json format based on the following three criteria:
+Your task is to analyze a patient form and list of hospitals and rank them in a .json format based on the following three criteria:
 - Availability : Only consider hospitals where "available": true
 - Specialty Match : The hospital must provide the required specialty based on the patient's medical condition.  
 - Proximity : closeness from the patient’s location.
 
 Example of expected output :
 {
-  "ranked_hospitals": [
+  "1":
     {
-      "rank": 1,
-      "name": "...",
-      "distance_km": 1.2,
-      "available_specialties": ["Cardiology", "Emergency Medicine"],
-      "address": "..."
+      "name": "Hôpital Européen Georges Pompidou AP-HP",
+      "geo": "48.840324299939184, 2.2721945783639392",
+      "specialities": ["Cardiology & Vascular Medicine", "Neurology & Neurosurgery"],
+      "address": "20 Rue Leblanc, 75015 Paris"
     },
-    {
-      "rank": 2,
-      "name": "...",
-      "distance_km": 3.5,
-      "available_specialties": ["Cardiology", "Neurology"],
-      "address": "..."
-    }
+    "2":
+     {
+      "name": "Hôpital Saint-Antoine",
+      "geo": "48.847011, 2.386498",
+      "specialities": ["Orthopedic & Trauma Surgery", "Pulmonology & Respiratory Medicine"],
+      "address": "184 Rue du Faubourg Saint-Antoine, 75012 Paris"
+    },
+    "3":
 	{
-		[...]
-	}
-  ]
+    "name": "Hôpital Européen Georges Pompidou AP-HP",
+    "geo": "48.840324299939184, 2.2721945783639392",
+    "specialities": [
+      "Cardiology & Vascular Medicine",
+      "Endocrinology & Diabetology",
+      "Gastroenterology & Hepatology",
+      "Geriatrics"
+    ],
+    "address": "20 Rue Leblanc, 75015 Paris"
+  },
+     "4":
+{
+    "name": "Hôpital Vaugirard AP-HP",
+    "geo": "48.8345683650467, 2.293561757610877",
+    "specialities": [
+      "Dietetic,  Neuropsychology, psychiatry, rehabilitayion, chipology"
+    ],
+    "address": "10 Rue Vaugelas, 75015 Paris"
+  },
 }
   ONLY OUTPUT THE .JSON FILE !!
+  LIMIT YOURSELF TO FOUR HOSPITALS !!
 `;
         const response = await client.chat.completions.create({
             model: "mistral-nemo-instruct-2407",

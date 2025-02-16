@@ -1,13 +1,14 @@
 import React, { useCallback } from 'react';
 import debounce from 'debounce';
 import { motion } from 'framer-motion';
-import { AlertCircle, Building2 as Hospital, Ambulance, Clock, Search, Activity, Brain, Thermometer, Zap } from 'lucide-react';
+import { AlertCircle, Building2 as Hospital, Ambulance, Clock, Search, Activity, Brain, Thermometer, Zap, Wand2, Loader2 } from 'lucide-react';
 import { useForm } from '../context/FormContext';
 import { logEmergencyData } from '../utils/formLogger';
 import { toast } from 'sonner';
 import { HospitalMap } from './HospitalMap';
 import { Modal } from './Modal';
 import { MapView } from './MapView';
+import { HospitalData } from '../types';
 
 const incidentTypes = [
   'Cardiovascular',
@@ -37,9 +38,125 @@ const criticalSigns = [
 
 function TriageForm() {
   const { state, dispatch } = useForm();
-  const { triage } = state;
-  const [showMap, setShowMap] = React.useState(false);
+  const { triage, showMap } = state;
+  const [showAutofill, setShowAutofill] = React.useState(false);
+  const [isAutofilling, setIsAutofilling] = React.useState(false);
+  const [lastKey, setLastKey] = React.useState('');
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'z') {
+        setLastKey('z');
+      } else if (e.key === 'x' && lastKey === 'z') {
+        setShowAutofill(true);
+        setLastKey('');
+      } else {
+        setLastKey('');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lastKey]);
   
+  const handleAutofill = async () => {
+    setIsAutofilling(true);
+    const baseState = { ...triage };
+    
+    // Initial pause before starting
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    // Urgency Level
+    dispatch({
+      type: 'SET_TRIAGE',
+      payload: { ...baseState, urgencyLevel: 'high' }
+    });
+    
+    // Incident Type (After 1.5s - Medical classification)
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    dispatch({
+      type: 'SET_TRIAGE',
+      payload: { ...baseState, urgencyLevel: 'high', incidentType: 'Neurological' }
+    });
+    
+    // Pain Level (After 2s - Patient assessment)
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    dispatch({
+      type: 'SET_TRIAGE',
+      payload: { 
+        ...baseState,
+        urgencyLevel: 'high',
+        incidentType: 'Neurological',
+        painLevel: '8'
+      }
+    });
+    
+    // Duration (After 1.8s - Time assessment)
+    await new Promise(resolve => setTimeout(resolve, 1800));
+    dispatch({
+      type: 'SET_TRIAGE',
+      payload: {
+        ...baseState,
+        urgencyLevel: 'high',
+        incidentType: 'Neurological',
+        painLevel: '8',
+        durationHours: '0',
+        durationMinutes: '5'
+      }
+    });
+    
+    // Critical Signs (After 2.5s - Detailed symptom check)
+    await new Promise(resolve => setTimeout(resolve, 2500));
+    dispatch({
+      type: 'SET_TRIAGE',
+      payload: {
+        ...baseState,
+        urgencyLevel: 'high',
+        incidentType: 'Neurological',
+        painLevel: '8',
+        durationHours: '0',
+        durationMinutes: '5',
+        criticalSigns: ['Severe Headache', 'Loss of Consciousness']
+      }
+    });
+    
+    // Consciousness State (After 2s - Consciousness check)
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    dispatch({
+      type: 'SET_TRIAGE',
+      payload: {
+        ...baseState,
+        urgencyLevel: 'high',
+        incidentType: 'Neurological',
+        painLevel: '8',
+        durationHours: '0',
+        durationMinutes: '5',
+        criticalSigns: ['Severe Headache', 'Loss of Consciousness'],
+        consciousnessState: 'Altered'
+      }
+    });
+    
+    // Description (After 3s - Detailed situation description)
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    dispatch({
+      type: 'SET_TRIAGE',
+      payload: {
+        ...baseState,
+        urgencyLevel: 'high',
+        incidentType: 'Neurological',
+        painLevel: '8',
+        durationHours: '0',
+        durationMinutes: '5',
+        criticalSigns: ['Severe Headache', 'Loss of Consciousness'],
+        consciousnessState: 'Altered',
+        description: '32-year-old patient with type 1 diabetes experiencing an epileptic seizure following a hypoglycemic episode. Blood glucose level at 42 mg/dL. Patient has a history of epilepsy and was found unconscious by family member. Post-ictal state with confusion. Last insulin dose taken 4 hours ago, missed recent meal. No head trauma observed during seizure.'
+      }
+    });
+    
+    setIsAutofilling(false);
+    toast.success('Filling in emergency case data...');
+  };
+
   const debouncedDispatch = useCallback(
     debounce((payload: any) => {
       dispatch({ type: 'SET_TRIAGE', payload });
@@ -50,7 +167,7 @@ function TriageForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     logEmergencyData(triage);
-    setShowMap(true);
+    handleApiTest();
   };
 
 const handleApiTest = async () => {
@@ -59,7 +176,7 @@ const handleApiTest = async () => {
       Urgency Level: ${triage.urgencyLevel}
       Incident Type: ${triage.incidentType}
       Pain Level: ${triage.painLevel}/10
-      Duration: ${triage.duration} ${triage.durationUnit}
+      Duration: ${triage.durationHours}h ${triage.durationMinutes}m
       Critical Signs: ${triage.criticalSigns.join(', ')}
       Consciousness State: ${triage.consciousnessState}
       Description: ${triage.description}
@@ -77,18 +194,34 @@ const handleApiTest = async () => {
           if (!response.ok) {
             throw new Error("API responded with an error.");
           }
-          return response.json();
+          return response.json()
         })
         .then((data) => {
-          console.log("API Response:", data);
-          return data.response || "No response received from AI.";
+          if (data) {
+            const ranking = JSON.parse(data.response);
+            const formattedHospitals: HospitalData[] = Object.keys(ranking).map((key, index) => {
+              const hospital = ranking[key];
+              const coordinates = hospital.geo.split(',').map(coord => parseFloat(coord.trim())) as [number, number];
+              return {
+                id: index + 1,
+                name: hospital.name,
+                address: hospital.address,
+                coordinates,
+                distance: "Calculating...",
+                eta: "Calculating..."
+              };
+            });
+            window.localStorage.setItem('hospitals', JSON.stringify(formattedHospitals));
+            dispatch({ type: 'SET_MAP_VISIBILITY', payload: true });
+          }
+          return "Hospitals list updated successfully!";
         }),
-      {
-        loading: "Calling AI API...",
-        success: (message) => message,
-        error: "API call failed",
-      }
-    );
+        {
+          loading: "Calling AI API...",
+          success: (message) => message,
+          error: "API call failed",
+        }
+      );
   } catch (error) {
     console.error("Error calling API:", error);
     toast.error("Failed to call API");
@@ -103,22 +236,31 @@ const handleApiTest = async () => {
       animate={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
       transition={{ duration: 0.3 }}
       className="max-w-5xl mx-auto px-4 py-12 sm:px-6 lg:px-8"
-      style={{
-        pointerEvents: showMap ? 'none' : 'auto',
-        opacity: showMap ? 0 : 1
-      }}
     >
+      {isAutofilling && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed top-0 left-0 right-0 z-50 bg-urgency-low/90 backdrop-blur-sm text-white py-4 shadow-lg"
+        >
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-3">
+            <Loader2 className="w-6 h-6 animate-spin" />
+            <span className="text-xl font-semibold">Autofilling Emergency Case Data...</span>
+          </div>
+        </motion.div>
+      )}
+
       <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-100 mb-6">
         <div className="flex items-center space-x-4 mb-6">
           <div className="p-3 bg-samu-light rounded-xl">
             <Ambulance className="w-8 h-8 text-samu" />
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold text-gray-900">Emergency Dispatch Center</h2>
+            <h2 className="text-3xl font-bold text-gray-900">Emergency Dispatch Center</h2>
             <p className="text-sm text-gray-600">SAMU Emergency Response System</p>
           </div>
           <div className="text-right">
-            <h3 className="text-lg font-bold text-samu">SwiftDispatch</h3>
+            <h3 className="text-2xl font-bold text-samu">EmerSwift</h3>
             <p className="text-sm text-gray-600">SAMU: Every minute counts.</p>
             <p className="text-sm text-gray-600">3 minutes is <i>too</i> long...</p>
           </div>
@@ -128,16 +270,28 @@ const handleApiTest = async () => {
       <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-gray-100">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Emergency Patient Information</h2>
-          <button
-            type="button"
-            onClick={() => {
-              dispatch({ type: 'RESET_FORM' });
-              toast.success('Form has been reset');
-            }}
-            className="flex items-center gap-2 px-6 py-3 text-white bg-samu hover:bg-samu-dark rounded-xl shadow-sm hover:shadow transition-all text-sm font-medium"
-          >
-            Reset Form
-          </button>
+          <div className="flex gap-4">
+            {showAutofill && (
+            <button
+              type="button"
+              onClick={handleAutofill}
+              className="flex items-center gap-3 px-8 py-4 text-white bg-accent hover:bg-accent-dark rounded-xl shadow-lg hover:shadow-xl transition-all text-xl font-medium"
+            >
+              <Wand2 className="w-5 h-5" />
+              Autofill
+            </button>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                dispatch({ type: 'RESET_FORM' });
+                toast.success('Form has been reset');
+              }}
+              className="flex items-center gap-3 px-8 py-4 text-white bg-samu hover:bg-samu-dark rounded-xl shadow-lg hover:shadow-xl transition-all text-xl font-medium"
+            >
+              Reset Form
+            </button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -145,7 +299,7 @@ const handleApiTest = async () => {
             <div>
               <label className="label flex items-center space-x-2 text-samu">
                 <AlertCircle className="w-5 h-5 flex-shrink-0" strokeWidth={2.5} />
-                <span className="text-lg">Urgency Level</span>
+                <span className="text-2xl">Urgency Level</span>
                 <span className="text-samu">*</span>
               </label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -153,16 +307,16 @@ const handleApiTest = async () => {
                   <button
                     key={level}
                     type="button"
-                    className={`min-h-[48px] p-4 border-2 rounded-lg transition-all uppercase font-bold tracking-wide ${
-                      triage.urgencyLevel === level
-                        ? level === 'critical' 
-                          ? 'border-red-500 bg-red-50 text-red-700'
-                          : level === 'high'
-                          ? 'border-orange-500 bg-orange-50 text-orange-700'
-                          : level === 'moderate'
-                          ? 'border-yellow-500 bg-yellow-50 text-yellow-700'
-                          : 'border-green-500 bg-green-50 text-green-700'
-                        : 'border-gray-200 hover:border-samu-light hover:bg-samu-light/50'
+                    className={`min-h-[48px] p-4 border-2 rounded-lg transition-all uppercase font-bold tracking-wide text-lg ${
+                      triage.urgencyLevel === level.toLowerCase()
+                        ? level === 'Critical'
+                          ? 'border-urgency-critical bg-urgency-critical-light text-urgency-critical-dark'
+                          : level === 'High'
+                          ? 'border-urgency-high bg-urgency-high-light text-urgency-high-dark'
+                          : level === 'Moderate'
+                          ? 'border-urgency-medium bg-urgency-medium-light text-urgency-medium-dark'
+                          : 'border-urgency-low bg-urgency-low-light text-urgency-low-dark'
+                        : 'border-urgency-base hover:border-urgency-base-dark hover:bg-urgency-base-light'
                     }`}
                     onClick={() =>
                       dispatch({
@@ -183,7 +337,7 @@ const handleApiTest = async () => {
             <div>
               <label className="label flex items-center space-x-2 text-samu">
                 <Activity className="w-5 h-5 flex-shrink-0" strokeWidth={2.5} />
-                <span className="text-lg">Incident Type</span>
+                <span className="text-2xl">Incident Type</span>
                 <span className="text-samu">*</span>
               </label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-4">
@@ -191,9 +345,9 @@ const handleApiTest = async () => {
                   <button
                     key={type}
                     type="button"
-                    className={`min-h-[64px] p-6 border-2 rounded-lg transition-all leading-relaxed ${
+                    className={`min-h-[64px] p-6 border-2 rounded-lg transition-all leading-relaxed text-xl font-medium ${
                       triage.incidentType === type
-                        ? 'border-samu bg-samu-light text-samu-dark font-bold'
+                        ? 'border-samu bg-samu-light text-samu-dark font-bold text-2xl'
                         : 'border-gray-200 hover:border-samu-light hover:bg-samu-light/50'
                     }`}
                     onClick={() =>
@@ -215,7 +369,7 @@ const handleApiTest = async () => {
             <div>
               <label className="label flex items-center space-x-2 text-samu">
                 <Thermometer className="w-5 h-5 flex-shrink-0" strokeWidth={2.5} />
-                <span className="text-lg">Pain Level</span>
+                <span className="text-2xl">Pain Level</span>
                 <span className="text-samu">*</span>
               </label>
               <div className="mt-12">
@@ -272,7 +426,7 @@ const handleApiTest = async () => {
             <div className="mt-10">
                 <label className="label flex items-center space-x-2 text-samu">
                   <Clock className="w-5 h-5 flex-shrink-0" strokeWidth={2.5} />
-                  <span className="text-lg">Symptom Duration</span>
+                  <span className="text-2xl">Symptom Duration</span>
                   <span className="text-samu">*</span>
                 </label>
                 <div className="grid grid-cols-2 gap-12 mt-6">
@@ -283,7 +437,7 @@ const handleApiTest = async () => {
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        className="h-[72px] w-[72px] border-2 rounded-xl transition-all text-2xl font-bold border-samu hover:bg-samu-light flex items-center justify-center"
+                        className="h-[72px] w-[72px] border-2 rounded-xl transition-all text-3xl font-bold border-samu hover:bg-samu-light flex items-center justify-center"
                         onClick={() => {
                           const currentHours = parseInt(triage.durationHours) || 0;
                           if (currentHours > 0) {
@@ -304,7 +458,7 @@ const handleApiTest = async () => {
                       </div>
                       <button
                         type="button"
-                        className="h-[72px] w-[72px] border-2 rounded-xl transition-all text-2xl font-bold border-samu hover:bg-samu-light flex items-center justify-center"
+                        className="h-[72px] w-[72px] border-2 rounded-xl transition-all text-3xl font-bold border-samu hover:bg-samu-light flex items-center justify-center"
                         onClick={() => {
                           const currentHours = parseInt(triage.durationHours) || 0;
                           dispatch({
@@ -372,14 +526,14 @@ const handleApiTest = async () => {
               <div className="mt-12">
                 <label className="label flex items-center space-x-2 text-samu">
                   <AlertCircle className="w-5 h-5 flex-shrink-0" strokeWidth={2.5} />
-                  <span className="text-lg">Critical Signs</span>
+                  <span className="text-2xl">Critical Signs</span>
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
                   {criticalSigns.map((sign) => (
                     <button
                       key={sign}
                       type="button"
-                      className={`min-h-[64px] p-4 border-2 rounded-xl transition-all leading-relaxed font-medium ${
+                      className={`min-h-[64px] p-4 border-2 rounded-xl transition-all leading-relaxed font-medium text-lg ${
                         triage.criticalSigns?.includes(sign)
                           ? 'border-samu bg-samu-light text-samu-dark'
                           : 'border-gray-200 hover:border-samu-light hover:bg-samu-light/50'
@@ -407,7 +561,7 @@ const handleApiTest = async () => {
               <div className="mt-12">
                 <label className="label flex items-center space-x-2 text-samu">
                   <Brain className="w-5 h-5 flex-shrink-0" strokeWidth={2.5} />
-                  <span className="text-lg">Consciousness State</span>
+                  <span className="text-2xl">Consciousness State</span>
                   <span className="text-samu">*</span>
                 </label>
                 <div className="grid grid-cols-3 gap-8 mt-6">
@@ -415,7 +569,7 @@ const handleApiTest = async () => {
                     <button
                       key={state}
                       type="button"
-                      className={`min-h-[72px] p-6 border-2 rounded-xl transition-all leading-relaxed font-medium ${
+                      className={`min-h-[72px] p-6 border-2 rounded-xl transition-all leading-relaxed font-medium text-lg ${
                         triage.consciousnessState === state
                           ? 'border-samu bg-samu-light text-samu-dark'
                           : 'border-gray-200 hover:border-samu-light hover:bg-samu-light/50'
@@ -439,10 +593,10 @@ const handleApiTest = async () => {
               <div className="mt-12">
                 <label className="label flex items-center space-x-2 text-samu">
                   <Hospital className="w-5 h-5 flex-shrink-0" strokeWidth={2.5} />
-                  <span className="text-lg">Situation Description</span>
+                  <span className="text-2xl">Situation Description</span>
                 </label>
                 <textarea
-                  className="input min-h-[200px] border-2 border-gray-200 rounded-xl transition-all focus:border-samu focus:ring-samu-light mt-6 text-base resize-none"
+                  className="input min-h-[200px] border-2 border-gray-200 rounded-xl transition-all focus:border-samu focus:ring-samu-light mt-6 text-2xl resize-none"
                   placeholder="Describe the emergency situation, patient profile, and any relevant details..."
                   value={triage.description}
                   onChange={(e) =>
@@ -472,7 +626,7 @@ const handleApiTest = async () => {
                   <span>Find Swift Route</span>
                 </motion.button>
                 
-                <motion.button
+                {/* <motion.button
                   aria-label="Test API connection"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -482,12 +636,12 @@ const handleApiTest = async () => {
                 >
                   <Zap className="w-5 h-5" />
                   <span>Test API Call</span>
-                </motion.button>
+                </motion.button> */}
               </div>
             </div>
           </form>
         </div>
-      <MapView isVisible={showMap} />
+      <MapView isVisible={state.showMap} />
     </motion.div>
   );
 }

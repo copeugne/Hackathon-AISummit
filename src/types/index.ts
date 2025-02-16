@@ -28,6 +28,7 @@ export interface FormState {
   patientInfo: PatientInfo;
   triage: TriageData;
   appointment: AppointmentType;
+  showMap: boolean;
 }
 
 export interface WaitTimeData {
@@ -37,4 +38,13 @@ export interface WaitTimeData {
     urgent: number;
   };
   teleconsultation: number;
+}
+
+export interface HospitalData {
+    id: number;
+    name: string;
+    address: string;
+    distance: string;
+    coordinates: [number, number];
+    eta: string;
 }

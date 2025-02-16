@@ -1,82 +1,63 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { ArrowLeft } from 'lucide-react';
 import { HospitalMap } from './HospitalMap';
 import { HospitalList } from './HospitalList';
 import { RoutePanel } from './RoutePanel';
+import { HospitalData } from '../types';
+import { useForm } from '../context/FormContext';
 
-interface RouteInfo {
-  distance: string;
-  eta: string;
-}
-
-interface MapViewProps {
+export function MapView({ isVisible }: {
   isVisible: boolean;
-}
-
-let hospitals = [
-  {
-    id: 1,
-    name: 'Hôpital Pitié-Salpêtrière',
-    address: "47-83 Boulevard de l'Hôpital, 75013 Paris",
-    distance: '2.5 km',
-    eta: '8 min'
-  },
-  {
-    id: 2,
-    name: 'Hôpital Européen Georges-Pompidou',
-    address: '20 Rue Leblanc, 75015 Paris',
-    distance: '4.2 km',
-    eta: '12 min'
-  },
-  {
-    id: 3,
-    name: 'Hôpital Saint-Antoine',
-    address: '184 Rue du Faubourg Saint-Antoine, 75012 Paris',
-    distance: '3.8 km',
-    eta: '10 min'
-  }
-];
-
-export function MapView({ isVisible }: MapViewProps) {
+}) {
+  const { dispatch } = useForm();
   const [selectedHospital, setSelectedHospital] = React.useState<number | null>(null);
   const [route, setRoute] = React.useState<any>(null);
-  const [hospitalsList, setHospitalsList] = React.useState<typeof hospitals>(hospitals);
+  const [hospitals, setHospitals] = React.useState<HospitalData[]>([]);
 
-  // Memoize these callbacks to avoid unnecessary re-renders / effect re-triggers in children
+  React.useEffect(() => {
+    if (isVisible) {
+      const savedHospitals = window.localStorage.getItem('hospitals');
+      if (savedHospitals) {
+        setHospitals(JSON.parse(savedHospitals));
+      }
+    }
+  }, [isVisible]);
+
+  // Mémoïse les callbacks pour éviter des re-rendus inutiles
   const handleHospitalSelect = React.useCallback((id: number) => {
     setSelectedHospital(id);
   }, []);
 
-  const handleAllRoutesCalculated = React.useCallback((routes: Record<number, RouteInfo>) => {
-    setHospitalsList(prevHospitals =>
+  const handleAllRoutesCalculated = React.useCallback((routes: Record<number, { distance: string; eta: string }>) => {
+    setHospitals(prevHospitals =>
       prevHospitals.map(hospital => ({
         ...hospital,
-        routeInfo: routes[hospital.id]
+        distance: routes[hospital.id]?.distance || hospital.distance,
+        eta: routes[hospital.id]?.eta || hospital.eta
       }))
     );
-  }, []);
+  }, [setHospitals]);
 
   const handleRouteCalculated = React.useCallback((calculatedRoute: any) => {
     setRoute(calculatedRoute);
-    setHospitalsList(prevHospitals =>
+    setHospitals(prevHospitals =>
       prevHospitals.map(hospital =>
         hospital.id === selectedHospital
           ? {
               ...hospital,
-              routeInfo: {
-                distance: calculatedRoute.distance,
-                eta: calculatedRoute.eta
-              }
+              distance: calculatedRoute.distance,
+              eta: calculatedRoute.eta
             }
           : hospital
       )
     );
-  }, [selectedHospital]);
+  }, [selectedHospital, setHospitals]);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: isVisible ? 1 : 0 }}
+      animate={{ opacity: isVisible ? 1 : 0, display: isVisible ? 'block' : 'none' }}
       transition={{ duration: 0.3 }}
       style={{
         pointerEvents: isVisible ? 'auto' : 'none',
@@ -86,11 +67,21 @@ export function MapView({ isVisible }: MapViewProps) {
         width: '100vw',
         height: '100vh',
         zIndex: 50,
-        visibility: isVisible ? 'visible' : 'hidden'
       }}
       className="bg-gray-50"
     >
       <div className="relative w-full h-full">
+        <motion.button
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          onClick={() => dispatch({ type: 'SET_MAP_VISIBILITY', payload: false })}
+          className="absolute top-8 left-8 z-[1000] flex items-center gap-3 px-8 py-6 bg-white/90 hover:bg-white text-gray-900 rounded-xl shadow-lg backdrop-blur-sm border-2 border-gray-100 transition-all font-medium text-2xl"
+          aria-label="Return to form"
+        >
+          <ArrowLeft className="w-6 h-6" />
+          <span>Back to Form</span>
+        </motion.button>
         <HospitalMap 
           selectedHospital={selectedHospital}
           onRouteCalculated={handleRouteCalculated}
@@ -98,7 +89,7 @@ export function MapView({ isVisible }: MapViewProps) {
         />
         <HospitalList
           isOpen={isVisible}
-          hospitals={hospitalsList}
+          hospitals={hospitals}
           onHospitalSelect={handleHospitalSelect}
         />
         {route && (
@@ -114,3 +105,4 @@ export function MapView({ isVisible }: MapViewProps) {
     </motion.div>
   );
 }
+

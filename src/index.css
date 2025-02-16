@@ -103,3 +103,7 @@
     display: none;
   } */
 }
+
+.mt-12 {
+  margin-bottom: 5rem;
+}

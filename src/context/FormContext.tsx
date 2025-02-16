@@ -6,7 +6,17 @@ type FormAction =
   | { type: 'SET_PATIENT_INFO'; payload: PatientInfo }
   | { type: 'SET_TRIAGE'; payload: TriageData }
   | { type: 'SET_APPOINTMENT'; payload: AppointmentType }
-  | { type: 'RESET_FORM' };
+  | { type: 'RESET_FORM' }
+  | { type: 'SET_MAP_VISIBILITY'; payload: boolean };
+
+export interface FormState {
+  patientInfo: PatientInfo;
+  triage: TriageData;
+  appointment: AppointmentType;
+  showMap: boolean;
+  duration: string;
+  durationUnit: string;
+}
 
 const initialState: FormState = {
   patientInfo: {
@@ -27,11 +37,14 @@ const initialState: FormState = {
     criticalSigns: [],
     consciousnessState: '',
     description: '',
+    duration: '',
+    durationUnit: 'minutes'
   },
   appointment: {
     type: 'in-person',
     preferredTime: '',
-  }
+  },
+  showMap: false,
 };
 
 const FormContext = createContext<{
@@ -48,10 +61,9 @@ function formReducer(state: FormState, action: FormAction): FormState {
     case 'SET_APPOINTMENT':
       return { ...state, appointment: action.payload };
     case 'RESET_FORM':
-      return {
-        ...state,
-        triage: initialState.triage
-      };
+      return initialState;
+    case 'SET_MAP_VISIBILITY':
+      return { ...state, showMap: action.payload };
     default:
       return state;
   }

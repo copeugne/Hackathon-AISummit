@@ -1,4 +1,4 @@
-# 🚑 SwiftDispatch: Streamlined Emergency Dispatch for SAMU
+# 🚑 EmerSwift: Streamlined Emergency Dispatch for SAMU
 
 ![DocFlow SAMU Interface](https://files.catbox.moe/x88ini.png)
 
@@ -16,7 +16,7 @@ SAMU regulators face the challenge of rapidly assessing emergency situations and
 
 ## 💡 Our Solution: SwiftDispatch for SAMU
 
-**SwiftDispatch** is an AI-powered tool designed to streamline emergency dispatch for SAMU regulators by:
+**EmerSwift** is an AI-powered tool designed to streamline emergency dispatch for SAMU regulators by:
 
 * **Rapid Triage:** Quickly assessing patient conditions based on critical information.
 * **Intelligent Hospital Redirection:** Suggesting optimal hospitals based on patient needs and real-time data.
@@ -35,7 +35,7 @@ SAMU regulators face the challenge of rapidly assessing emergency situations and
 * **Mocked OpenStreetMap Integration:** A visual representation of hospital locations and potential redirection routes.
 
 > [!IMPORTANT]
-> **Time Savings:** SwiftDispatch's streamlined triage and hospital recommendation process is designed to significantly reduce the time SAMU regulators spend on initial assessment and hospital selection, allowing for faster patient care.
+> **Time Savings:** EmerSwift's streamlined triage and hospital recommendation process is designed to significantly reduce the time SAMU regulators spend on initial assessment and hospital selection, allowing for faster patient care.
 
 
 ---
@@ -63,7 +63,7 @@ Built for speed, scalability, and rapid prototyping:
 
 ## 🔮 Future Enhancements
 
-Future iterations of SwiftDispatch for SAMU will include:
+Future iterations of EmerSwift for SAMU will include:
 
 * **Advanced AI Models:** More sophisticated AI algorithms for improved triage and recommendations.
 * **Real-time Hospital Capacity Data:** Integration with real-time hospital data to optimize redirection.
@@ -74,12 +74,15 @@ Future iterations of SwiftDispatch for SAMU will include:
 
 ## 🤝 Team Nameless
 
-  * **[Colin Peugnet]** - 
-  * **[Samy Chouam]** - 
-  * **[Arnaud Durand]** - 
-  * **[Dimitri Abitbol]** - 
-  * **[Romain Malengrez]** - 
-  * **[Thibaut Tebi]** - 
+| #  | Name              | Background                  |
+|----|------------------|---------------------------|
+| 1  | Romain Malengrez | Freelance Product Designer  |
+| 2  | Thibaut Tebi     | Biomedical Engineer        |
+| 3  | Dimitri Abitbol  | Data Scientist             |
+| 4  | Samy Chouam      | Software Engineer          |
+| 5  | Colin Peugnet    | Software Engineer          |
+| 6  | Arnaud Durand    | Software Engineer          |
+
 
 ## 🚀 Getting Started (Local Demo Setup)
 
@@ -99,4 +102,4 @@ Future iterations of SwiftDispatch for SAMU will include:
 
 **Let's revolutionize emergency response with SwiftDispatch!** 🚀
 > [!NOTE]
-> **Looking Ahead:** SwiftDispatch's current capabilities are a foundation. We envision future versions integrating real-time data feeds, advanced AI algorithms, and seamless integration with existing SAMU infrastructure to create a truly transformative emergency dispatch solution.
+> **Looking Ahead:** EmerSwift's current capabilities are a foundation. We envision future versions integrating real-time data feeds, advanced AI algorithms, and seamless integration with existing SAMU infrastructure to create a truly transformative emergency dispatch solution.
