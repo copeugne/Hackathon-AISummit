@@ -2,6 +2,7 @@ import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import OpenAI from "openai";
 import dotenv from "dotenv";
+import { json } from "express";
 
 dotenv.config(); // Charger les variables d'environnement
 
@@ -14,7 +15,7 @@ const s3 = new S3Client({
 	},
 });
 
-let jsonData = fetchSignedJson();
+let jsonData = await fetchSignedJson();
 
 async function generateSignedUrl() {
 	const command = new GetObjectCommand({
@@ -44,8 +45,9 @@ async function fetchSignedJson() {
 
 	// 3️⃣ Convertir en JSON
 	const data = await response.json();
+	// console.log(data);
 	const jsonString = JSON.stringify(data, null, 2);
-	// console.log("Fetched JSON Data:", data);
+	// console.log(jsonString)
 
 	return jsonString;
 	} catch (error) {
@@ -67,19 +69,50 @@ const client = new OpenAI({
  */
 export async function generateAIResponse(emergencyData) {
     try {
-
+		console.log(emergencyData);
 		const messageContent = `
-        **🔴 Emergency :**
+        **🔴 Patient form :**
         ${emergencyData}
 
-        **🏥 Hospitals data available :**
+        **🏥 Hospitals data : **
         ${jsonData}
         `;
+
+		const prePompt = `
+You are an AI assistant specializing in emergency triage and hospital selection.
+Your task is to analyze a patient form and list of hospitals and rank all of them in a .json format based on the following three criteria:
+- Availability : Only consider hospitals where "available": true
+- Specialty Match : The hospital must provide the required specialty based on the patient's medical condition.  
+- Proximity : closeness from the patient’s location.
+
+Example of expected output :
+{
+  "ranked_hospitals": [
+    {
+      "rank": 1,
+      "name": "...",
+      "distance_km": 1.2,
+      "available_specialties": ["Cardiology", "Emergency Medicine"],
+      "address": "..."
+    },
+    {
+      "rank": 2,
+      "name": "...",
+      "distance_km": 3.5,
+      "available_specialties": ["Cardiology", "Neurology"],
+      "address": "..."
+    }
+	{
+		[...]
+	}
+  ]
+}
+`;
         const response = await client.chat.completions.create({
             model: "mistral-nemo-instruct-2407",
             messages: [
-                { role: "system", content: "You are an AI specialized in emergency triage. Analyze the following data and provide a list of hospitals with a score out of 10 for each one to determine their suitability for the current situation."},
-                { role: "user", content: emergencyData },
+                { role: "system", content: prePompt},
+				{role: "user", content: messageContent}
             ],
             max_tokens: 512,
             temperature: 0.3,
@@ -94,3 +127,7 @@ export async function generateAIResponse(emergencyData) {
         throw new Error("Failed to generate AI response.");
     }
 }
+
+
+
+
