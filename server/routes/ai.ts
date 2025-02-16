@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import { StatusCodes } from 'http-status-codes';
-import { generateAIResponse } from '../services/openai.js';
+import { generateAIResponse } from '../services/openai.ts';
 import { BaseError } from '../utils/errors.ts';
 
 const router = Router();

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import debounce from 'debounce';
 import { motion } from 'framer-motion';
 import { AlertCircle, Building2 as Hospital, Ambulance, Clock, Search, Activity, Brain, Thermometer, Zap } from 'lucide-react';
 import { useForm } from '../context/FormContext';
@@ -6,6 +7,7 @@ import { logEmergencyData } from '../utils/formLogger';
 import { toast } from 'sonner';
 import { HospitalMap } from './HospitalMap';
 import { Modal } from './Modal';
+import { MapView } from './MapView';
 
 const incidentTypes = [
   'Cardiovascular',
@@ -30,12 +32,19 @@ const criticalSigns = [
 export function TriageForm() {
   const { state, dispatch } = useForm();
   const { triage } = state;
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [showMap, setShowMap] = React.useState(false);
+  
+  const debouncedDispatch = useCallback(
+    debounce((payload: any) => {
+      dispatch({ type: 'SET_TRIAGE', payload });
+    }, 300),
+    []
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     logEmergencyData(triage);
-    setIsModalOpen(true);
+    setShowMap(true);
   };
 
 const handleApiTest = async () => {
@@ -84,9 +93,14 @@ const handleApiTest = async () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 0 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
       className="max-w-4xl mx-auto px-4 py-8 sm:px-6"
+      style={{
+        pointerEvents: showMap ? 'none' : 'auto',
+        opacity: showMap ? 0 : 1
+      }}
     >
       <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-gray-100 mb-8">
         <div className="flex items-center space-x-4 mb-6">
@@ -117,15 +131,10 @@ const handleApiTest = async () => {
                 required
                 className="input border-red-200 focus:border-red-400 focus:ring-red-100"
                 value={triage.urgencyLevel}
-                onChange={(e) =>
-                  dispatch({
-                    type: 'SET_TRIAGE',
-                    payload: {
-                      ...triage,
-                      urgencyLevel: e.target.value,
-                    },
-                  })
-                }
+                onChange={(e) => debouncedDispatch({
+                  ...triage,
+                  urgencyLevel: e.target.value,
+                })}
               >
                 <option value="">Select urgency level</option>
                 <option value="critical">Critical</option>
@@ -145,15 +154,10 @@ const handleApiTest = async () => {
                 required
                 className="input border-red-200 focus:border-red-400 focus:ring-red-100"
                 value={triage.incidentType}
-                onChange={(e) =>
-                  dispatch({
-                    type: 'SET_TRIAGE',
-                    payload: {
-                      ...triage,
-                      incidentType: e.target.value,
-                    },
-                  })
-                }
+                onChange={(e) => debouncedDispatch({
+                  ...triage,
+                  incidentType: e.target.value,
+                })}
               >
                 <option value="">Select incident type</option>
                 {incidentTypes.map((type) => (
@@ -349,65 +353,7 @@ const handleApiTest = async () => {
           </div>
         </form>
       </div>
-<div className='flex items-center justify-center'>
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Hospital Redirection Suggestions"
-      >
-        <div className="space-y-6 flex justify-center items-center">
-          <HospitalMap />
-
-          <div className="space-y-4">
-            <h4 className="font-semibold text-gray-900 flex justify-center items-center">Suggested Hospitals:</h4>
-            {[
-              {
-                name: 'Hôpital Pitié-Salpêtrière',
-                address: '47-83 Boulevard de l\'Hôpital, 75013 Paris',
-                distance: '2.5 km',
-                eta: '8 min',
-                pin: 1
-              },
-              {
-                name: 'Hôpital Européen Georges-Pompidou',
-                address: '20 Rue Leblanc, 75015 Paris',
-                distance: '4.2 km',
-                eta: '12 min',
-                pin: 2
-              },
-              {
-                name: 'Hôpital Saint-Antoine',
-                address: '184 Rue du Faubourg Saint-Antoine, 75012 Paris',
-                distance: '3.8 km',
-                eta: '10 min',
-                pin: 3
-              }
-            ].map((hospital, index) => (
-              <div
-                key={hospital.name}
-                className="p-4 border-2 border-red-100 rounded-lg hover:bg-red-50 transition-colors"
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
-                        {hospital.pin}
-                      </div>
-                      <h5 className="font-semibold text-gray-900">{hospital.name}</h5>
-                    </div>
-                    <p className="text-sm text-gray-600 mt-1">{hospital.address}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-medium text-red-600">{hospital.distance}</p>
-                    <p className="text-xs text-gray-500 mt-1">ETA: {hospital.eta}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Modal>
-      </div>
+      <MapView isVisible={showMap} />
     </motion.div>
   );
 }
