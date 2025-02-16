@@ -4,10 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: '#2B6CB0',
-          light: '#4299E1',
-          dark: '#2C5282',
+        samu: {
+          DEFAULT: '#003399',
+          light: '#B3D1FF',
+          dark: '#002266',
         },
         success: {
           DEFAULT: '#38A169',

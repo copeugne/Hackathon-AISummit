@@ -66,12 +66,12 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
           >
             <div className="flex items-center justify-between mb-6">
               <h2 id="modal-title" className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <Hospital className="w-6 h-6 text-red-600" />
+                <Hospital className="w-6 h-6 text-samu" />
                 {title}
               </h2>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                className="p-2 hover:bg-samu-light rounded-lg transition-colors"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5 text-gray-500" />
@@ -84,3 +84,5 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
     </AnimatePresence>
   );
 }
+
+export { Modal }

@@ -12,8 +12,8 @@ export interface TriageData {
   urgencyLevel: string;
   incidentType: string;
   painLevel: string;
-  duration: string;
-  durationUnit: string;
+  durationHours: string;
+  durationMinutes: string;
   criticalSigns: string[];
   consciousnessState: string;
   description: string;
@@ -25,7 +25,6 @@ export interface AppointmentType {
 }
 
 export interface FormState {
-  step: number;
   patientInfo: PatientInfo;
   triage: TriageData;
   appointment: AppointmentType;

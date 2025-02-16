@@ -19,10 +19,7 @@ export function logEmergencyData(data: TriageData): void {
       urgencyLevel: data.urgencyLevel,
       incidentType: data.incidentType,
       painLevel: data.painLevel,
-      duration: {
-        value: data.duration,
-        unit: data.durationUnit
-      },
+      duration: `${data.durationHours}h ${data.durationMinutes}m`,
       criticalSigns: data.criticalSigns,
       consciousnessState: data.consciousnessState,
       description: data.description
@@ -32,7 +29,7 @@ export function logEmergencyData(data: TriageData): void {
     console.log('🚨 Urgency Level:', formattedData.urgencyLevel);
     console.log('🏥 Incident Type:', formattedData.incidentType);
     console.log('📊 Pain Level:', `${formattedData.painLevel}/10`);
-    console.log('⏱️ Duration:', `${formattedData.duration.value} ${formattedData.duration.unit}`);
+    console.log('⏱️ Duration:', formattedData.duration);
     console.log('⚠️ Critical Signs:', formattedData.criticalSigns.length ? formattedData.criticalSigns.join(', ') : 'None reported');
     console.log('🧠 Consciousness State:', formattedData.consciousnessState);
     console.log('📝 Description:', formattedData.description || 'No description provided');

@@ -27,16 +27,16 @@ export function RoutePanel({ isOpen, route }: RoutePanelProps) {
           <h3 className="text-xl font-bold text-gray-900">Route Details</h3>
           
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-red-50 rounded-lg">
-              <div className="flex items-center gap-2 text-red-600">
+            <div className="p-4 bg-samu-light rounded-lg">
+              <div className="flex items-center gap-2 text-samu">
                 <Clock className="w-4 h-4" />
                 <span className="font-semibold">ETA</span>
               </div>
               <p className="mt-1 text-lg font-bold text-gray-900">{route.eta}</p>
             </div>
             
-            <div className="p-4 bg-red-50 rounded-lg">
-              <div className="flex items-center gap-2 text-red-600">
+            <div className="p-4 bg-samu-light rounded-lg">
+              <div className="flex items-center gap-2 text-samu">
                 <Navigation2 className="w-4 h-4" />
                 <span className="font-semibold">Distance</span>
               </div>

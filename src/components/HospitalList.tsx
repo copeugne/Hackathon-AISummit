@@ -38,7 +38,7 @@ export function HospitalList({ isOpen, hospitals, onHospitalSelect }: HospitalLi
     >
       <div className="p-6 border-b border-gray-200 bg-white/50 backdrop-blur-sm">
         <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-          <Hospital className="w-5 h-5 text-red-600" />
+          <Hospital className="w-5 h-5 text-samu" />
           Available Hospitals
         </h3>
       </div>
@@ -55,7 +55,7 @@ export function HospitalList({ isOpen, hospitals, onHospitalSelect }: HospitalLi
             <div className="flex justify-between items-start">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                  <div className="w-6 h-6 bg-samu text-white rounded-full flex items-center justify-center font-bold text-sm">
                     {hospital.id}
                   </div>
                   <h4 className="font-semibold text-gray-900 text-left">{hospital.name}</h4>
@@ -66,10 +66,10 @@ export function HospitalList({ isOpen, hospitals, onHospitalSelect }: HospitalLi
 
             <div className="mt-3 grid grid-cols-2 gap-3">
               <div className="flex items-center gap-2 text-sm">
-                <Navigation2 className="w-4 h-4 text-red-600" />
+                <Navigation2 className="w-4 h-4 text-samu" />
                 <span className="text-gray-700">
                   {hospital.routeInfo?.distance === 'Error' ? (
-                    <span className="text-red-500">Service unavailable</span>
+                    <span className="text-samu">Service unavailable</span>
                   ) : hospital.routeInfo?.distance === 'Unavailable' ? (
                     <span className="text-orange-500">No route found</span>
                   ) : hospital.routeInfo?.distance || (
@@ -78,10 +78,10 @@ export function HospitalList({ isOpen, hospitals, onHospitalSelect }: HospitalLi
                 </span>
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <Clock className="w-4 h-4 text-red-600" />
+                <Clock className="w-4 h-4 text-samu" />
                 <span className="text-gray-700">
                   ETA: {hospital.routeInfo?.eta === 'Error' ? (
-                    <span className="text-red-500">Service unavailable</span>
+                    <span className="text-samu">Service unavailable</span>
                   ) : hospital.routeInfo?.eta === 'Unavailable' ? (
                     <span className="text-orange-500">No route found</span>
                   ) : hospital.routeInfo?.eta || (

@@ -89,7 +89,7 @@ function RoutingMachine({ selectedHospital, onRouteCalculated }: RoutingMachineP
             : L.latLng(USER_LOCATION[0], USER_LOCATION[1])
         ],
         lineOptions: {
-          styles: [{ color: '#DC2626', opacity: 1, weight: 6 }],
+          styles: [{ color: '#003399', opacity: 1, weight: 6 }],
           extendToWaypoints: true,
           missingRouteTolerance: 0
         },
@@ -247,12 +247,12 @@ export function HospitalMap({ selectedHospital, onRouteCalculated, onAllRoutesCa
             <Popup className="hospital-popup">
               <div className="p-2">
                 <div className="flex items-center gap-2 mb-2">
-                  <Hospital className="w-4 h-4 text-red-600" />
+                  <Hospital className="w-4 h-4 text-samu" />
                   <h3 className="font-semibold text-gray-900">{hospital.name}</h3>
                 </div>
                 <p className="text-sm text-gray-600">{hospital.address}</p>
                 <div className="mt-2 text-sm">
-                  <p className="text-red-600 font-medium">{hospital.distance}</p>
+                  <p className="text-samu font-medium">{hospital.distance}</p>
                   <p className="text-gray-500">ETA: {hospital.eta}</p>
                 </div>
               </div>

@@ -5,10 +5,10 @@ type FormAction =
   | { type: 'SET_STEP'; payload: number }
   | { type: 'SET_PATIENT_INFO'; payload: PatientInfo }
   | { type: 'SET_TRIAGE'; payload: TriageData }
-  | { type: 'SET_APPOINTMENT'; payload: AppointmentType };
+  | { type: 'SET_APPOINTMENT'; payload: AppointmentType }
+  | { type: 'RESET_FORM' };
 
 const initialState: FormState = {
-  step: 1,
   patientInfo: {
     firstName: '',
     lastName: '',
@@ -21,9 +21,9 @@ const initialState: FormState = {
     specialty: 'Cardiologist',
     urgencyLevel: '',
     incidentType: '',
-    painLevel: '5',
-    duration: '',
-    durationUnit: 'minutes',
+    painLevel: '0',
+    durationHours: '0',
+    durationMinutes: '0',
     criticalSigns: [],
     consciousnessState: '',
     description: '',
@@ -41,8 +41,6 @@ const FormContext = createContext<{
 
 function formReducer(state: FormState, action: FormAction): FormState {
   switch (action.type) {
-    case 'SET_STEP':
-      return { ...state, step: action.payload };
     case 'SET_PATIENT_INFO':
       return { ...state, patientInfo: action.payload };
     case 'SET_TRIAGE':
@@ -50,7 +48,10 @@ function formReducer(state: FormState, action: FormAction): FormState {
     case 'SET_APPOINTMENT':
       return { ...state, appointment: action.payload };
     case 'RESET_FORM':
-      return initialState;
+      return {
+        ...state,
+        triage: initialState.triage
+      };
     default:
       return state;
   }
