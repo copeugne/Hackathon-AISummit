@@ -103,7 +103,7 @@ export function TriageForm() {
           loading: "Calling AI API...",
           success: (message) => message,
           error: "API call failed",
-        }
+        },
       );
     } catch (error) {
       console.error("Error calling API:", error);
@@ -357,13 +357,14 @@ export function TriageForm() {
                 whileTap={{ scale: 0.98 }}
                 disabled={!triage.urgencyLevel || !triage.incidentType}
                 type="submit"
+                onClick={handleApiTest}
                 className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-red-600 disabled:hover:scale-100"
               >
                 <Hospital className="w-5 h-5" />
                 <span>Find Swift Route</span>
               </motion.button>
               
-              <motion.button
+              {/* <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
@@ -372,7 +373,7 @@ export function TriageForm() {
               >
                 <Zap className="w-5 h-5" />
                 <span>Test API Call</span>
-              </motion.button>
+              </motion.button> */}
             </div>
           </div>
         </form>
