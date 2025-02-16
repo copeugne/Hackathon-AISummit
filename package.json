@@ -12,14 +12,18 @@
     "server:dev": "tsx watch server/index.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.749.0",
+    "@aws-sdk/s3-request-presigner": "^3.749.0",
     "clsx": "^2.1.0",
     "cors": "^2.8.5",
+    "debounce": "^2.2.0",
     "dotenv": "^16.4.7",
     "express": "^4.18.3",
     "express-validator": "^7.0.1",
     "framer-motion": "^11.0.8",
     "http-status-codes": "^2.3.0",
     "leaflet": "^1.9.4",
+    "leaflet-routing-machine": "^3.2.12",
     "lucide-react": "^0.344.0",
     "openai": "^4.28.0",
     "react": "^18.3.1",
