@@ -103,7 +103,6 @@ export function TriageForm() {
             
             if (data) {
               const ranking = JSON.parse(data.response);
-			  console.log(ranking);
               const formattedHospitals: HospitalData[] = Object.keys(ranking).map((key, index) => {
                 const hospital = ranking[key];
                 return {
@@ -115,11 +114,13 @@ export function TriageForm() {
                   eta: "N/A" // ETA non fourni, valeur par défaut
                 };
               });
-              console.log(formattedHospitals)
+			  console.log(formattedHospitals);
               setHospitals(formattedHospitals);
+			  
             }
   
             // return rankedHosp
+			console.log(hospitals)
             return "Hospitals list updated successfully!";
           }),
         {
@@ -134,8 +135,9 @@ export function TriageForm() {
     }
   };
   
-
-// return JSON.stringify(data.response, null, 2) || "No response received from AI.";
+  React.useEffect(() => {
+	console.log("Hospitals mis à jour :", hospitals);
+  }, [hospitals]);
 
   return (
     <motion.div
