@@ -107,6 +107,7 @@ Example of expected output :
 	}
   ]
 }
+  ONLY OUTPUT THE .JSON FILE !!
 `;
         const response = await client.chat.completions.create({
             model: "mistral-nemo-instruct-2407",
