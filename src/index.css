@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import 'leaflet/dist/leaflet.css';
+@import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 
 @tailwind base;
 @tailwind components;
@@ -53,6 +54,52 @@
   }
 
   .leaflet-container {
-    @apply w-full h-[400px] rounded-lg;
+    @apply w-full h-full;
   }
+
+  /* Hide routing machine elements */
+  /* .leaflet-routing-container {
+    display: none !important;
+  } */
+
+  /* Ensure route line is visible and stable */
+  .leaflet-routing-line {
+    /* pointer-events: none !important; */
+    z-index: 399 !important;
+  }
+
+  /* Hide routing machine elements */
+  /* .leaflet-routing-container,
+  .leaflet-routing-alternatives-container {
+    display: none ;
+  } */
+
+
+  /* Map loading and marker styles */
+  .leaflet-tile-container {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .leaflet-tile-loaded {
+    opacity: 1;
+  }
+
+  .leaflet-marker-icon {
+    z-index: 1000 !important;
+  }
+
+  .hospital-popup {
+    z-index: 1001 !important;
+  }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+
+  /* Hide default routing control panel */
+  /* .leaflet-routing-container {
+    display: none;
+  } */
 }
