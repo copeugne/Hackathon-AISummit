@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { HospitalMap } from './HospitalMap';
 import { Modal } from './Modal';
 import { MapView } from './MapView';
+import { HospitalData } from '../types/index.ts';
 
 const incidentTypes = [
   'Cardiovascular',
@@ -27,6 +28,30 @@ const criticalSigns = [
   'Chest Pain',
   'Difficulty Breathing',
   'Active Bleeding'
+];
+
+let hospitals: HospitalData[] = [
+  {
+    id: 1,
+    name: 'Hôpital Pitié-Salpêtrière',
+    address: "47-83 Boulevard de l'Hôpital, 75013 Paris",
+    distance: '2.5 km',
+    eta: '8 min'
+  },
+  {
+    id: 2,
+    name: 'Hôpital Européen Georges-Pompidou',
+    address: '20 Rue Leblanc, 75015 Paris',
+    distance: '4.2 km',
+    eta: '12 min'
+  },
+  {
+    id: 3,
+    name: 'Hôpital Saint-Antoine',
+    address: '184 Rue du Faubourg Saint-Antoine, 75012 Paris',
+    distance: '3.8 km',
+    eta: '10 min'
+  }
 ];
 
 export function TriageForm() {
@@ -353,7 +378,7 @@ const handleApiTest = async () => {
           </div>
         </form>
       </div>
-      <MapView isVisible={showMap} />
+      <MapView isVisible={showMap} hospitals={hospitals} />
     </motion.div>
   );
 }

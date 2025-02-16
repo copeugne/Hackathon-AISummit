@@ -39,3 +39,11 @@ export interface WaitTimeData {
   };
   teleconsultation: number;
 }
+
+export interface HospitalData {
+    id: number;
+    name: string;
+    address: string;
+    distance: string;
+    eta: string;
+}
